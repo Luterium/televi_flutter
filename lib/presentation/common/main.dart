@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' show Client;
+import 'package:provider/provider.dart';
 import 'package:televi_flutter/blocs/movie_bloc/movies_bloc.dart';
 import 'package:televi_flutter/presentation/scenes/movie/movie_list/MovieList.dart';
 import 'package:televi_flutter/data/repository/MoviesRepository.dart';
@@ -14,8 +14,14 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       title: "Televi Flutter",
-      home: BlocProvider(
-        create: (context) => MoviesBloc(movieRepository: MovieRepository(client: Client())),
+      home: MultiProvider(
+        providers: [
+          Provider<MovieRepository>(create: (_) => MovieRepository(client: Client())),
+          ProxyProvider<MovieRepository, MoviesBloc>(
+            create: (_) => MoviesBloc(movieRepository: null),
+            update: (context, repository, bloc) => MoviesBloc(movieRepository: repository),
+          )
+        ],
         child: MovieList(),
       )
     );

@@ -8,9 +8,3 @@ abstract class MoviesEvent {
 class GetMovies extends MoviesEvent {
   const GetMovies();
 }
-
-class GetDetailedMovie extends MoviesEvent {
-  final int movieID;
-
-  const GetDetailedMovie({@required this.movieID});
-}

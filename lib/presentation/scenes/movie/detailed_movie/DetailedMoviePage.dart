@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:televi_flutter/blocs/movie_bloc/bloc.dart';
-import 'package:televi_flutter/blocs/movie_bloc/movies_bloc.dart';
-import 'package:televi_flutter/blocs/movie_bloc/movies_event.dart';
+import 'package:provider/provider.dart';
+import 'package:televi_flutter/blocs/detailed_movie_bloc/bloc/bloc/bloc.dart';
 import 'package:televi_flutter/data/models/DetailedMovie.dart';
 import 'package:televi_flutter/presentation/common/Widgets.dart';
 
@@ -24,8 +23,7 @@ class _DetailedMoviePageState extends State<DetailedMoviePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    BlocProvider.of<MoviesBloc>(context)
-      ..add(GetDetailedMovie(movieID: widget.movieID));
+    Provider.of<DetailedMovieBloc>(context)..add(GetDetailedMovie(movieID: widget.movieID));
   }
 
   @override
@@ -36,10 +34,10 @@ class _DetailedMoviePageState extends State<DetailedMoviePage> {
         backgroundColor: Colors.black54,
       ),
       body: Container(
-        child: BlocListener<MoviesBloc, MoviesState>(
+        child: BlocListener<DetailedMovieBloc, DetailedMovieState>(
           listener: (context, state) {
           },
-          child: BlocBuilder<MoviesBloc, MoviesState>(
+          child: BlocBuilder<DetailedMovieBloc, DetailedMovieState>(
             builder: (context, state) {
               if (state is MovieLoading) {
                   return buildLoadingScreen();
@@ -147,6 +145,6 @@ Widget buildMovieError(BuildContext context, int movieID) {
 }
 
 void fetchMovie(BuildContext context, int movieID) {
-  final moviesBloc = BlocProvider.of<MoviesBloc>(context);
+  final moviesBloc = Provider.of<DetailedMovieBloc>(context);
   moviesBloc.add(GetDetailedMovie(movieID: movieID));
 }

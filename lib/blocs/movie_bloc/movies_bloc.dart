@@ -7,6 +7,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   final MovieRepository movieRepository;
 
   MoviesBloc({this.movieRepository});
+  
   @override
   MoviesState get initialState => MoviesLoading();
 
@@ -21,16 +22,6 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
         yield MoviesLoaded(movieList: movieList);
       } catch (e) {
         yield MoviesLoadingError();
-        throw Exception('Request Error');
-      }
-    }
-    else if(event is GetDetailedMovie) {
-      yield MovieLoading();
-      try {
-        final movie = await movieRepository.getDetailedMovie(event.movieID);
-        yield MovieLoaded(movie: movie);
-      } catch (e) {
-        yield MovieLoadingError();
         throw Exception('Request Error');
       }
     }

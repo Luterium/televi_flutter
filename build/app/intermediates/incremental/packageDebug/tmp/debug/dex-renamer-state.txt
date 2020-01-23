@@ -1,4 +1,4 @@
-#Tue Jan 21 12:14:59 BRST 2020
-base.0=/Users/tokenlab/Documents/flutterProjects/televi_flutter/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
+#Thu Jan 23 10:08:27 BRST 2020
+base.0=/Users/tokenlab/Documents/flutterProjects/flutterTelevi/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

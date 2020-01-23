@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:televi_flutter/blocs/detailed_movie_bloc/bloc/bloc/detailed_movie_bloc.dart';
 import 'package:televi_flutter/blocs/movie_bloc/bloc.dart';
-import 'package:televi_flutter/blocs/movie_bloc/movies_bloc.dart';
 import 'package:televi_flutter/blocs/movie_bloc/movies_event.dart';
 import 'package:televi_flutter/data/models/Movie.dart';
+import 'package:televi_flutter/data/repository/MoviesRepository.dart';
 import 'package:televi_flutter/presentation/scenes/movie/detailed_movie/DetailedMoviePage.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:televi_flutter/presentation/common/Widgets.dart';
+import 'package:provider/provider.dart';
 
 class MovieList extends StatefulWidget {
   MovieList({Key key}) : super(key: key);
@@ -16,19 +17,12 @@ class MovieList extends StatefulWidget {
 }
 
 class _MovieListState extends State<MovieList> {
-  final _onTryAgain = new PublishSubject<void>();
 
   Stream<void> onTryAgain;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    fetchMovies(context);
-  }
-
-  @override
-  void initState() {
-    super.initState();
     fetchMovies(context);
   }
 
@@ -82,27 +76,27 @@ extension on _MovieListState {
               color: Colors.black
             )),
           onPressed: () {
-            _onTryAgain.add(null);
             fetchMovies(context);
           },
           color: Colors.grey,
+            ),
+          Padding(
+            padding: EdgeInsets.only(top: 16),
+            child: Text(
+              "Não foi possível carregar os filmes",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black
+              )
+            ),
+          )],
         ),
-        Padding(
-          padding: EdgeInsets.only(top: 16),
-          child: Text(
-            "Não foi possível carregar os filmes",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.black
-            )),
-        )],
-      ),
       )
     );
   }
 
   void fetchMovies(BuildContext context) {
-    final moviesBloc = BlocProvider.of<MoviesBloc>(context);
+    final moviesBloc = Provider.of<MoviesBloc>(context);
     moviesBloc.add(GetMovies());
   }
 }
@@ -118,11 +112,11 @@ Widget buildMoviesList(BuildContext context, List<Movie> movieList) {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                  value: BlocProvider.of<MoviesBloc>(context),
+                builder: (_) => Provider(
+                  create: (_) => DetailedMovieBloc(movieRepository: Provider.of<MovieRepository>(context)),
                   child: DetailedMoviePage(
                     movieID: movieList[index].id
-                  ),
+                  )
                 ),
               )
             );
@@ -135,34 +129,33 @@ Widget buildMoviesList(BuildContext context, List<Movie> movieList) {
 
 Widget movieContainer(Movie movie) {
   return Padding(
-          padding: EdgeInsets.all(8),
-          child: Stack(
+    padding: EdgeInsets.all(8),
+    child: Stack(
+      children: <Widget>[
+        Image(
+          image: NetworkImage(movie.imageURL),
+        ),
+        Positioned(
+          bottom: 4,
+          right: 16,
+          child: Row(
             children: <Widget>[
-              Image(
-                image: NetworkImage(movie.imageURL),
+              Icon(
+                Icons.star,
+                color: Colors.yellow,
+                size: 24,
               ),
-              Positioned(
-                bottom: 4,
-                right: 16,
-                child: Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 24,
-                    ),
-                    Text(
-                      movie.voteAverage.toString(),
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.yellow
-                      ),
-                    )
-                  ],
-                  )
+              Text(
+                movie.voteAverage.toString(),
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.yellow
+                ),
               )
             ],
           )
-  );
-        
+        )
+      ],
+    )
+  );  
 }
