@@ -18,12 +18,21 @@ class MyApp extends StatelessWidget {
         providers: [
           Provider<MovieRepository>(create: (_) => MovieRepository(client: Client())),
           ProxyProvider<MovieRepository, MoviesBloc>(
-            create: (_) => MoviesBloc(movieRepository: null),
+            create: (_) => MoviesBloc(movieRepository: null,),
             update: (context, repository, bloc) => MoviesBloc(movieRepository: repository),
           )
         ],
         child: MovieList(),
       )
+      /*
+        Provider<MovieRepository>(
+          create: (_) => MovieRepository(client: Client()),
+          child: Provider<MoviesBloc>(
+            create: (_) => MoviesBloc(movieRepository: Provider.of<MovieRepository>(context)),
+            child: MovieList()
+          )
+        ),
+        */
     );
   }
 }
