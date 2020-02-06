@@ -9,7 +9,7 @@ class DetailedMovieBloc extends Bloc<DetailedMovieEvent, DetailedMovieState> {
   DetailedMovieBloc({this.movieRepository});
 
   @override
-  DetailedMovieState get initialState => InitialDetailedMovieState();
+  DetailedMovieState get initialState => MovieLoading();
 
   @override
   Stream<DetailedMovieState> mapEventToState(

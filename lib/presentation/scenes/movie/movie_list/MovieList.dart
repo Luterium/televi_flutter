@@ -96,7 +96,7 @@ extension on _MovieListState {
   }
 
   void fetchMovies(BuildContext context) {
-    final moviesBloc = Provider.of<MoviesBloc>(context);
+    final moviesBloc = BlocProvider.of<MoviesBloc>(context);
     moviesBloc.add(GetMovies());
   }
 }
@@ -112,11 +112,11 @@ Widget buildMoviesList(BuildContext context, List<Movie> movieList) {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => Provider(
-                  create: (_) => DetailedMovieBloc(movieRepository: Provider.of<MovieRepository>(context)),
+                builder: (_) => BlocProvider.value(
+                  value: BlocProvider.of<DetailedMovieBloc>(context),
                   child: DetailedMoviePage(
                     movieID: movieList[index].id
-                  )
+                  ),
                 ),
               )
             );

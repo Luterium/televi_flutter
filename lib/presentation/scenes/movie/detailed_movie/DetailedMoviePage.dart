@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:televi_flutter/blocs/detailed_movie_bloc/bloc/bloc/bloc.dart';
 import 'package:televi_flutter/data/models/DetailedMovie.dart';
 import 'package:televi_flutter/presentation/common/Widgets.dart';
@@ -23,7 +22,8 @@ class _DetailedMoviePageState extends State<DetailedMoviePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Provider.of<DetailedMovieBloc>(context)..add(GetDetailedMovie(movieID: widget.movieID));
+    BlocProvider.of<DetailedMovieBloc>(context)
+      ..add(GetDetailedMovie(movieID: widget.movieID));
   }
 
   @override
@@ -126,7 +126,7 @@ Widget buildMovieError(BuildContext context, int movieID) {
             color: Colors.black
           )),
         onPressed: () {
-          fetchMovie(context, movieID);
+          BlocProvider.of<DetailedMovieBloc>(context)..add(GetDetailedMovie(movieID: movieID));
         },
         color: Colors.grey,
       ),
@@ -142,9 +142,4 @@ Widget buildMovieError(BuildContext context, int movieID) {
     ),
     )
   );
-}
-
-void fetchMovie(BuildContext context, int movieID) {
-  final moviesBloc = Provider.of<DetailedMovieBloc>(context);
-  moviesBloc.add(GetDetailedMovie(movieID: movieID));
 }
